@@ -1,0 +1,7 @@
+{
+  "lr_server_url": "http://localhost:33385",
+  "lr_server_user_number": "endpoint01",
+  "lr_server_user_password": "endpoint01",
+  "debug_mode": true,
+  "timer_ping_interval": 10
+}
