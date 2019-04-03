@@ -1,7 +1,8 @@
 package model
 
 type LrConfig struct {
-	LRServerUrl          string `json:"lr_server_url"`
+	LRServerHost         string `json:"lr_server_host"`
+	LRServerPort         int    `json:"lr_server_port"`
 	LRServerUserNumber   string `json:"lr_server_user_number"`
 	LRServerUserPassword string `json:"lr_server_user_password"`
 	DebugMode            bool   `json:"debug_mode"`

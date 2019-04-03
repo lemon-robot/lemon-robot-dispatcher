@@ -3,12 +3,15 @@ package core
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/websocket"
 	"lemon-robot-dispatcher/define/define_storage_key"
 	"lemon-robot-dispatcher/subutils"
 	"lemon-robot-dispatcher/sysinfo"
 	"lemon-robot-golang-commons/logger"
 	"lemon-robot-golang-commons/utils/lruhttp"
+	"log"
 	"os"
+	"runtime"
 )
 
 func LoginToServer() {
@@ -34,15 +37,23 @@ func LoginToServer() {
 	StoragePut(define_storage_key.LOGIN_TOKEN, token)
 	lruhttp.AppendCommonHeader(map[string]string{"Authorization": "Bearer " + token})
 	logger.Info("Login successful, token: " + token)
-	Ping()
+	ListenTheServer(token)
 }
 
-func Ping() {
-	logger.Info("Ping to server")
-	responseText, err := lruhttp.RequestJson("POST", "/dispatcher/ping", nil, nil)
+func ListenTheServer(token string) {
+	dialer := websocket.Dialer{}
+	conUrl := fmt.Sprintf("ws://%v:%v/ws/%v/%v/%v/%v", sysinfo.LrConfig().LRServerHost, sysinfo.LrConfig().LRServerPort, runtime.GOOS, runtime.GOARCH, sysinfo.AppVersion(), token)
+	con, _, err := dialer.Dial(conUrl, nil)
 	if err != nil {
-		logger.Error("Cannot login to server", err)
-		os.Exit(-1)
+		logger.Error("Cannot connect to the websocket server", err)
+		os.Exit(1)
 	}
-	fmt.Println(responseText)
+	logger.Info("Websocket was successfully established")
+	for {
+		_, message, err := con.ReadMessage()
+		if err != nil {
+			logger.Error("Errors occurred while reading cancelled messages from websocket", err)
+		}
+		log.Printf("Receive messages from websocket: %s", message)
+	}
 }

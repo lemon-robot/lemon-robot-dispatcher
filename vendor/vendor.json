@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "gr0edNJuVv4+olNNZl5ZmwLgscA=",
+			"path": "github.com/gorilla/websocket",
+			"revision": "0ec3d1bd7fe50c503d6df98ee649d81f4857c564",
+			"revisionTime": "2019-03-06T00:42:57Z"
+		},
+		{
 			"checksumSHA1": "WdorbyEJiNbjIOiQzM4TLb/XA7Q=",
 			"path": "github.com/robertkrimen/otto",
 			"revision": "15f95af6e78dcd2030d8195a138bd88d4f403546",

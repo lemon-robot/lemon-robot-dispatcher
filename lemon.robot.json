@@ -1,5 +1,6 @@
 {
-  "lr_server_url": "http://localhost:33385",
+  "lr_server_host": "localhost",
+  "lr_server_port": 33385,
   "lr_server_user_number": "endpoint01",
   "lr_server_user_password": "endpoint01",
   "debug_mode": true,
