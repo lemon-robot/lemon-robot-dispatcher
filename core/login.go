@@ -9,6 +9,7 @@ import (
 	"lemon-robot-dispatcher/sysinfo"
 	"lemon-robot-golang-commons/logger"
 	"lemon-robot-golang-commons/utils/lruhttp"
+	lrumachine "lemon-robot-golang-commons/utils/machine"
 	"log"
 	"os"
 	"runtime"
@@ -42,7 +43,13 @@ func LoginToServer() {
 
 func ListenTheServer(token string) {
 	dialer := websocket.Dialer{}
-	conUrl := fmt.Sprintf("ws://%v:%v/ws/%v/%v/%v/%v", sysinfo.LrConfig().LRServerHost, sysinfo.LrConfig().LRServerPort, runtime.GOOS, runtime.GOARCH, sysinfo.AppVersion(), token)
+	machineCode, mcErr := lrumachine.GetMachineSign()
+	if mcErr != nil {
+		logger.Error("The system could not register because the machine code could not be generated from the MAC address.", mcErr)
+		os.Exit(1)
+	}
+	logger.Info("The machine code has been calculated：" + machineCode)
+	conUrl := fmt.Sprintf("ws://%v:%v/ws/%v/%v/%v/%v/%v", sysinfo.LrConfig().LRServerHost, sysinfo.LrConfig().LRServerPort, runtime.GOOS, runtime.GOARCH, sysinfo.AppVersion(), machineCode, token)
 	con, _, err := dialer.Dial(conUrl, nil)
 	if err != nil {
 		logger.Error("Cannot connect to the websocket server", err)
