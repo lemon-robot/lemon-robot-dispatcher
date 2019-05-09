@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-var lrConfigObj = &model.LrConfig{}
+var lrDispatcherConfigObj = &model.LrDispatcherConfig{}
 
 const configFileName = "lemon.robot.json"
 
@@ -21,15 +21,15 @@ func checkConfigExisted() bool {
 	return lruio.PathExists(configFilePath())
 }
 
-func LrConfig() *model.LrConfig {
+func LrDispatcherConfig() *model.LrDispatcherConfig {
 	if checkConfigExisted() {
-		err := lruio.JsonToStruct(configFilePath(), &lrConfigObj)
+		err := lruio.JsonToStruct(configFilePath(), &lrDispatcherConfigObj)
 		if err != nil {
 			logger.Error("An error occurred while parsing the configuration ["+configFileName+"], please check your config file.", err)
 			os.Exit(1)
 			return nil
 		}
-		return lrConfigObj
+		return lrDispatcherConfigObj
 	}
 	logger.Warn("Configuration file  [" + configFileName + "] not found, please check your config file")
 	return nil

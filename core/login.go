@@ -16,10 +16,10 @@ import (
 )
 
 func LoginToServer() {
-	logger.Info("Logging in to the server as: " + sysinfo.LrConfig().LRServerUserNumber)
+	logger.Info("Logging in to the server as: " + sysinfo.LrDispatcherConfig().LRServerUserNumber)
 	responseText, err := lruhttp.RequestJson("POST", "/user/login", map[string]string{
-		"number":   sysinfo.LrConfig().LRServerUserNumber,
-		"password": sysinfo.LrConfig().LRServerUserPassword,
+		"number":   sysinfo.LrDispatcherConfig().LRServerUserNumber,
+		"password": sysinfo.LrDispatcherConfig().LRServerUserPassword,
 	}, map[string]string{})
 	if err != nil {
 		logger.Error("Cannot login to server", err)
@@ -49,7 +49,7 @@ func ListenTheServer(token string) {
 		os.Exit(1)
 	}
 	logger.Info("The machine code has been calculated：" + machineCode)
-	conUrl := fmt.Sprintf("ws://%v:%v/ws/%v/%v/%v/%v/%v", sysinfo.LrConfig().LRServerHost, sysinfo.LrConfig().LRServerPort, runtime.GOOS, runtime.GOARCH, sysinfo.AppVersion(), machineCode, token)
+	conUrl := fmt.Sprintf("ws://%v:%v/ws/%v/%v/%v/%v/%v", sysinfo.LrDispatcherConfig().LRServerHost, sysinfo.LrDispatcherConfig().LRServerPort, runtime.GOOS, runtime.GOARCH, sysinfo.AppVersion(), machineCode, token)
 	con, _, err := dialer.Dial(conUrl, nil)
 	if err != nil {
 		logger.Error("Cannot connect to the websocket server", err)

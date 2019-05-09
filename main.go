@@ -12,7 +12,7 @@ import (
 func startUp() {
 	logger.Info("Start the " + sysinfo.AppName() + " startup process")
 	lemonrobot.PrintInfo(sysinfo.AppName(), sysinfo.AppVersion())
-	lruhttp.SetBaseUrl(fmt.Sprintf("http://%v:%v", sysinfo.LrConfig().LRServerHost, sysinfo.LrConfig().LRServerPort))
+	lruhttp.SetBaseUrl(fmt.Sprintf("http://%v:%v", sysinfo.LrDispatcherConfig().LRServerHost, sysinfo.LrDispatcherConfig().LRServerPort))
 	core.LoginToServer()
 }
 

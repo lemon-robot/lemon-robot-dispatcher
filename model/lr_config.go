@@ -1,6 +1,6 @@
 package model
 
-type LrConfig struct {
+type LrDispatcherConfig struct {
 	LRServerHost         string `json:"lr_server_host"`
 	LRServerPort         int    `json:"lr_server_port"`
 	LRServerUserNumber   string `json:"lr_server_user_number"`
