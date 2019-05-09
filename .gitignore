@@ -1,3 +1,7 @@
 .idea
 .DS_Store
 lemon_robot_dispatcher
+**/*.iml
+vendor/*
+!vendor/vendor.json
+lr_workspace
