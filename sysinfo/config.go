@@ -18,12 +18,12 @@ func configFilePath() string {
 }
 
 func checkConfigExisted() bool {
-	return lruio.PathExists(configFilePath())
+	return lru_io.PathExists(configFilePath())
 }
 
 func LrDispatcherConfig() *model.LrDispatcherConfig {
 	if checkConfigExisted() {
-		err := lruio.JsonToStruct(configFilePath(), &lrDispatcherConfigObj)
+		err := lru_io.JsonToStruct(configFilePath(), &lrDispatcherConfigObj)
 		if err != nil {
 			logger.Error("An error occurred while parsing the configuration ["+configFileName+"], please check your config file.", err)
 			os.Exit(1)

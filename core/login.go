@@ -17,7 +17,7 @@ import (
 
 func LoginToServer() {
 	logger.Info("Logging in to the server as: " + sysinfo.LrDispatcherConfig().LRServerUserNumber)
-	responseText, err := lruhttp.RequestJson("POST", "/user/login", map[string]string{
+	responseText, err := lru_http.RequestJson("POST", "/user/login", map[string]string{
 		"number":   sysinfo.LrDispatcherConfig().LRServerUserNumber,
 		"password": sysinfo.LrDispatcherConfig().LRServerUserPassword,
 	}, map[string]string{})
@@ -36,7 +36,7 @@ func LoginToServer() {
 	}
 	token := responseMap["data"].(string)
 	StoragePut(define_storage_key.LOGIN_TOKEN, token)
-	lruhttp.AppendCommonHeader(map[string]string{"Authorization": "Bearer " + token})
+	lru_http.AppendCommonHeader(map[string]string{"Authorization": "Bearer " + token})
 	logger.Info("Login successful, token: " + token)
 	ListenTheServer(token)
 }
