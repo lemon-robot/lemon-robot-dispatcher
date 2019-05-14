@@ -8,8 +8,8 @@ import (
 	"lemon-robot-dispatcher/subutils"
 	"lemon-robot-dispatcher/sysinfo"
 	"lemon-robot-golang-commons/logger"
-	"lemon-robot-golang-commons/utils/lruhttp"
-	lrumachine "lemon-robot-golang-commons/utils/machine"
+	"lemon-robot-golang-commons/utils/lru_http"
+	"lemon-robot-golang-commons/utils/lru_machine"
 	"log"
 	"os"
 	"runtime"
@@ -17,7 +17,7 @@ import (
 
 func LoginToServer() {
 	logger.Info("Logging in to the server as: " + sysinfo.LrDispatcherConfig().LRServerUserNumber)
-	responseText, err := lru_http.RequestJson("POST", "/user/login", map[string]string{
+	responseText, err := lru_http.GetInstance().RequestJson("POST", "/user/login", map[string]string{
 		"number":   sysinfo.LrDispatcherConfig().LRServerUserNumber,
 		"password": sysinfo.LrDispatcherConfig().LRServerUserPassword,
 	}, map[string]string{})
@@ -36,20 +36,17 @@ func LoginToServer() {
 	}
 	token := responseMap["data"].(string)
 	StoragePut(define_storage_key.LOGIN_TOKEN, token)
-	lru_http.AppendCommonHeader(map[string]string{"Authorization": "Bearer " + token})
+	lru_http.GetInstance().AppendCommonHeader(map[string]string{"Authorization": "Bearer " + token})
 	logger.Info("Login successful, token: " + token)
 	ListenTheServer(token)
 }
 
 func ListenTheServer(token string) {
 	dialer := websocket.Dialer{}
-	machineCode, mcErr := lrumachine.GetMachineSign()
-	if mcErr != nil {
-		logger.Error("The system could not register because the machine code could not be generated from the MAC address.", mcErr)
-		os.Exit(1)
-	}
-	logger.Info("The machine code has been calculated：" + machineCode)
-	conUrl := fmt.Sprintf("ws://%v:%v/ws/%v/%v/%v/%v/%v", sysinfo.LrDispatcherConfig().LRServerHost, sysinfo.LrDispatcherConfig().LRServerPort, runtime.GOOS, runtime.GOARCH, sysinfo.AppVersion(), machineCode, token)
+	logger.Info("The machine code has been calculated：" + lru_machine.GetInstance().GetMachineSign())
+	conUrl := fmt.Sprintf("ws://%v:%v/ws/%v/%v/%v/%v/%v",
+		sysinfo.LrDispatcherConfig().LRServerHost, sysinfo.LrDispatcherConfig().LRServerPort, runtime.GOOS,
+		runtime.GOARCH, sysinfo.AppVersion(), lru_machine.GetInstance().GetMachineSign(), token)
 	con, _, err := dialer.Dial(conUrl, nil)
 	if err != nil {
 		logger.Error("Cannot connect to the websocket server", err)
